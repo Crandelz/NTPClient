@@ -107,20 +107,20 @@ unsigned long NTPClient::getEpochTime() const {
          ((millis() - this->_lastUpdate) / 1000); // Time since last update
 }
 
-int NTPClient::getDay() const {
+int NTPClient::getDay() {
   return (((this->getEpochTime()  / 86400L) + 4 ) % 7); //0 is Sunday
 }
-int NTPClient::getHours() const {
+int NTPClient::getHours() {
   return ((this->getEpochTime()  % 86400L) / 3600);
 }
-int NTPClient::getMinutes() const {
+int NTPClient::getMinutes() {
   return ((this->getEpochTime() % 3600) / 60);
 }
-int NTPClient::getSeconds() const {
+int NTPClient::getSeconds() {
   return (this->getEpochTime() % 60);
 }
 
-String NTPClient::getFormattedTime() const {
+String NTPClient::getFormattedTime() {
   unsigned long rawTime = this->getEpochTime();
   unsigned long hours = (rawTime % 86400L) / 3600;
   String hoursStr = hours < 10 ? "0" + String(hours) : String(hours);
@@ -132,6 +132,72 @@ String NTPClient::getFormattedTime() const {
   String secondStr = seconds < 10 ? "0" + String(seconds) : String(seconds);
 
   return hoursStr + ":" + minuteStr + ":" + secondStr;
+}
+
+int NTPClient::getYear() {
+  time_t rawtime = this->getEpochTime();
+  struct tm * ti;
+  ti = localtime (&rawtime);
+  int year = ti->tm_year + 1900;
+  
+  return year;
+}
+
+int NTPClient::getMonth() {
+  time_t rawtime = this->getEpochTime();
+  struct tm * ti;
+  ti = localtime (&rawtime);
+  int month = (ti->tm_mon + 1) < 10 ? 0 + (ti->tm_mon + 1) : (ti->tm_mon + 1);
+  
+  return month;
+}
+
+int NTPClient::getDay() {
+  time_t rawtime = this->getEpochTime();
+  struct tm * ti;
+  ti = localtime (&rawtime);
+  int day = (ti->tm_mday) < 10 ? 0 + (ti->tm_mday) : (ti->tm_mday);
+  
+  return day;
+}
+
+String NTPClient::getFormattedDate() {
+	int day = this->getDate();
+	int month = this->getMonth();
+	int year = this->getYear();
+	
+	String dayStr = day < 10 ? "0" + String(day) : String(day);
+	String monthStr = month < 10 ? "0" + String(month) : String(month);
+	String yearStr = String(year);
+	
+	return dayStr + "." + monthStr + "." + yearStr;
+}
+
+String NTPClient::getFullFormattedTime() {
+   time_t rawtime = this->getEpochTime();
+   struct tm * ti;
+   ti = localtime (&rawtime);
+
+   uint16_t year = ti->tm_year + 1900;
+   String yearStr = String(year);
+
+   uint8_t month = ti->tm_mon + 1;
+   String monthStr = month < 10 ? "0" + String(month) : String(month);
+
+   uint8_t day = ti->tm_mday;
+   String dayStr = day < 10 ? "0" + String(day) : String(day);
+
+   uint8_t hours = ti->tm_hour;
+   String hoursStr = hours < 10 ? "0" + String(hours) : String(hours);
+
+   uint8_t minutes = ti->tm_min;
+   String minuteStr = minutes < 10 ? "0" + String(minutes) : String(minutes);
+
+   uint8_t seconds = ti->tm_sec;
+   String secondStr = seconds < 10 ? "0" + String(seconds) : String(seconds);
+
+   return yearStr + "-" + monthStr + "-" + dayStr + " " +
+          hoursStr + ":" + minuteStr + ":" + secondStr;
 }
 
 void NTPClient::end() {
