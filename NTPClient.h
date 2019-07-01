@@ -71,7 +71,7 @@ class NTPClient {
     int getSeconds();
     int getYear();
     int getMonth();
-    int getDay();
+    int getDate();
 
     /**
      * Changes the time offset. Useful for changing timezones dynamically
