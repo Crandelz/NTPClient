@@ -152,7 +152,7 @@ int NTPClient::getMonth() {
   return month;
 }
 
-int NTPClient::getDay() {
+int NTPClient::getDate() {
   time_t rawtime = this->getEpochTime();
   struct tm * ti;
   ti = localtime (&rawtime);
