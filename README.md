@@ -40,7 +40,7 @@ void setup(){
 void loop() {
   timeClient.update();
 
-  Serial.println(timeClient.getFormattedTime());
+  Serial.println(timeClient.getFullFormattedTime());
 
   delay(1000);
 }
